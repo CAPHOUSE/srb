@@ -10,12 +10,9 @@ import com.atguigu.srb.core.service.IntegralGradeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import jdk.nashorn.internal.objects.annotations.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 /**
  * <p>
@@ -38,7 +35,6 @@ public class AdminIntegralGradeController {
     @ApiOperation("积分等级列表")
     @GetMapping("/list")
     public Result listAll(){
-        log.info("");
         return Result.ok(integralGradeService.list());
     }
 
@@ -51,7 +47,6 @@ public class AdminIntegralGradeController {
             return Result.ok();
         }else {
             throw new GlobalRuntimeException(ResultEnum.BAD_SQL_GRAMMAR_ERROR);
-//            return Result.fail();
         }
     }
 
@@ -65,7 +60,7 @@ public class AdminIntegralGradeController {
         if (result){
             return Result.ok();
         }else {
-            return Result.fail();
+            throw new GlobalRuntimeException(ResultEnum.BAD_SQL_GRAMMAR_ERROR);
         }
     }
 
@@ -77,7 +72,7 @@ public class AdminIntegralGradeController {
         if (null != integralGrade){
             return Result.ok(integralGrade);
         }else {
-            return Result.fail();
+            throw new GlobalRuntimeException(ResultEnum.BAD_SQL_GRAMMAR_ERROR);
         }
     }
 
@@ -88,7 +83,7 @@ public class AdminIntegralGradeController {
         if (result){
             return Result.ok();
         }else {
-            return Result.fail();
+           throw new GlobalRuntimeException(ResultEnum.BAD_SQL_GRAMMAR_ERROR);
         }
     }
 }

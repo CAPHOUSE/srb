@@ -53,8 +53,7 @@
 
 
         <!-- 设置滚动日志记录的滚动策略 -->
-        <rollingPolicy class="ch.qo
-        s.logback.core.rolling.TimeBasedRollingPolicy">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 日志归档路径以及格式 -->
             <fileNamePattern>${log.path}/info/log-rolling-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!--归档日志文件保留的最大数量-->
