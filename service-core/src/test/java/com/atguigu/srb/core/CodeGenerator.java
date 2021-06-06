@@ -1,5 +1,7 @@
 package com.atguigu.srb.core;
 
+import com.atguigu.srb.core.mapper.DictMapper;
+import com.atguigu.srb.core.pojo.entity.Dict;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
@@ -9,7 +11,14 @@ import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 
+import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
+
+@SpringBootTest
 public class CodeGenerator {
 
     @Test
@@ -57,4 +66,9 @@ public class CodeGenerator {
         // 6、执行
         mpg.execute();
     }
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+
 }
