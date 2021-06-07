@@ -44,6 +44,6 @@ public class ApiSmsController {
 
         redisTemplate.opsForValue().set("srb:sms:code:" + mobile,code,5, TimeUnit.MINUTES);
 
-        return Result.ok();
+        return Result.ok().message("验证码发送成功");
     }
 }
