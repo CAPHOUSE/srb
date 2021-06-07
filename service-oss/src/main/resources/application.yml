@@ -8,7 +8,7 @@ spring:
     name: service-oss # 服务名
 aliyun:
   oss:
-    endpoint: srb-client.oss-cn-beijing.aliyuncs.com
+    endpoint: oss-cn-beijing.aliyuncs.com
     keyId: LTAI5tQqMRnoRwDNC4GTMEd6
     keySecret: yBbBIZ3H86nhR7or22JQZUJ0nXDl9E
     bucketName: srb-client
