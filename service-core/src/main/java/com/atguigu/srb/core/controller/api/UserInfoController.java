@@ -9,6 +9,7 @@ import com.atguigu.srb.core.pojo.vo.LoginVO;
 import com.atguigu.srb.core.pojo.vo.RegisterVO;
 import com.atguigu.srb.core.pojo.vo.UserInfoVO;
 import com.atguigu.srb.core.service.UserInfoService;
+import com.atguigu.srb.util.JwtUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +86,23 @@ public class UserInfoController {
         UserInfoVO userInfoVO = userInfoService.login(loginVO,ip);
 
         return Result.ok(userInfoVO).message("登录成功");
+    }
+
+
+    @ApiOperation("校验令牌")
+    @GetMapping("/checkToken")
+    public Result checkToken(HttpServletRequest request){
+
+        String token = request.getHeader("token");
+
+        boolean result = JwtUtils.checkToken(token);
+
+        if(result){
+            return Result.ok().message("校验成功1");
+        }else{
+            //LOGIN_AUTH_ERROR(-211, "未登录"),
+            return Result.setResult(ResultEnum.LOGIN_AUTH_ERROR);
+        }
     }
 }
 
