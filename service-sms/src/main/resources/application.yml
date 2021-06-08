@@ -2,6 +2,11 @@ server:
   port: 8120 # 服务端口
 
 spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #配置nacos
+
   application:
     name: service-sms # 服务名
 
@@ -29,3 +34,17 @@ spring:
           ssl:
             enable: true
 
+
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000 #连接超时配置
+        readTimeout: 600000 #执行超时配置
+
+
+
+logging:
+  level:
+    com.atguigu.srb.sms.client.CoreUserInfoClient: DEBUG #以什么级别监控哪个接口

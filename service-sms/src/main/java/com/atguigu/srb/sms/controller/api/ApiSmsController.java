@@ -5,6 +5,7 @@ import com.atguigu.common.result.Result;
 import com.atguigu.common.result.ResultEnum;
 import com.atguigu.common.util.RandomUtils;
 import com.atguigu.common.util.RegexValidateUtils;
+import com.atguigu.srb.sms.client.CoreUserInfoClient;
 import com.atguigu.srb.sms.service.SmsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,9 @@ public class ApiSmsController {
     private SmsService smsService;
 
     @Autowired
+    private CoreUserInfoClient coreUserInfoClient;
+
+    @Autowired
     private RedisTemplate redisTemplate;
 
     @ApiOperation("获取验证码")
@@ -35,6 +39,10 @@ public class ApiSmsController {
 
         //MOBILE_NULL_ERROR(-202, "手机号不能为空"),
         Assert.notEmpty(mobile, ResultEnum.MOBILE_NULL_ERROR);
+
+        //判断手机是否被注册
+        boolean flag = coreUserInfoClient.checkMobile(mobile);
+        Assert.isTrue(flag == false,ResultEnum.MOBILE_EXIST_ERROR);
 
         //生成验证码
         String code = RandomUtils.getFourBitRandom();

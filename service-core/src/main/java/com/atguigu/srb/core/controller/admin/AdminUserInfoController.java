@@ -50,7 +50,7 @@ public class AdminUserInfoController {
    public Result lock(@ApiParam("用户id") @PathVariable Long id,
                       @ApiParam("用户状态") @PathVariable Integer status){
         userInfoService.lock(id,status);
-        return Result.ok();
+        return Result.ok().message(status == 1 ? "解锁成功" : "锁定成功");
    }
 }
 

@@ -27,4 +27,6 @@ public interface UserInfoService extends IService<UserInfo> {
 
     void lock(Long id, Integer status);
 
+    boolean checkMobile(String mobile);
+
 }
