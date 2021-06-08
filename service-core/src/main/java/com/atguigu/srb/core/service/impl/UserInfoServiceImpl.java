@@ -9,13 +9,17 @@ import com.atguigu.srb.core.pojo.entity.UserAccount;
 import com.atguigu.srb.core.pojo.entity.UserInfo;
 import com.atguigu.srb.core.mapper.UserInfoMapper;
 import com.atguigu.srb.core.pojo.entity.UserLoginRecord;
+import com.atguigu.srb.core.pojo.query.UserInfoQuery;
 import com.atguigu.srb.core.pojo.vo.LoginVO;
 import com.atguigu.srb.core.pojo.vo.RegisterVO;
 import com.atguigu.srb.core.pojo.vo.UserInfoVO;
 import com.atguigu.srb.core.service.UserInfoService;
 import com.atguigu.srb.util.JwtUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -110,5 +114,42 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
 //        返回用户信息
         return userInfoVO;
+    }
+
+
+
+    @Override
+    public IPage<UserInfo> listPage(Page<UserInfo> pageParam, UserInfoQuery userInfoQuery) {
+
+        if (userInfoQuery == null){
+            return baseMapper.selectPage(pageParam,null);
+        }
+
+        String mobile = userInfoQuery.getMobile();
+        Integer status = userInfoQuery.getStatus();
+        Integer userType = userInfoQuery.getUserType();
+
+        QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
+        if (StringUtils.isNotBlank(mobile)){
+            wrapper.eq("mobile",mobile);
+        }
+        if (status != null){
+            wrapper.eq("status",status);
+        }
+        if (userType != null){
+            wrapper.eq("user_type",userType);
+        }
+
+        return baseMapper.selectPage(pageParam,wrapper);
+    }
+
+
+
+    @Override
+    public void lock(Long id, Integer status) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setId(id);
+        userInfo.setStatus(status);
+        baseMapper.updateById(userInfo);
     }
 }

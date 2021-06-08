@@ -98,7 +98,7 @@ public class UserInfoController {
         boolean result = JwtUtils.checkToken(token);
 
         if(result){
-            return Result.ok().message("校验成功1");
+            return Result.ok().message("校验成功！");
         }else{
             //LOGIN_AUTH_ERROR(-211, "未登录"),
             return Result.setResult(ResultEnum.LOGIN_AUTH_ERROR);
