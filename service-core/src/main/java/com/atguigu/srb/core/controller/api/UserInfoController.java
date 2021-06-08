@@ -41,7 +41,6 @@ public class UserInfoController {
     public Result register(@RequestBody RegisterVO registerVO){
 
         String mobile = registerVO.getMobile();
-        String password = registerVO.getPassword();
         String code = registerVO.getCode();
 
         String codeGen = (String) redisTemplate.opsForValue().get("srb:sms:code:" + mobile);
