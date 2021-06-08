@@ -4,11 +4,16 @@ import com.atguigu.common.exception.Assert;
 import com.atguigu.common.result.ResultEnum;
 import com.atguigu.common.util.MD5;
 import com.atguigu.srb.core.mapper.UserAccountMapper;
+import com.atguigu.srb.core.mapper.UserLoginRecordMapper;
 import com.atguigu.srb.core.pojo.entity.UserAccount;
 import com.atguigu.srb.core.pojo.entity.UserInfo;
 import com.atguigu.srb.core.mapper.UserInfoMapper;
+import com.atguigu.srb.core.pojo.entity.UserLoginRecord;
+import com.atguigu.srb.core.pojo.vo.LoginVO;
 import com.atguigu.srb.core.pojo.vo.RegisterVO;
+import com.atguigu.srb.core.pojo.vo.UserInfoVO;
 import com.atguigu.srb.core.service.UserInfoService;
+import com.atguigu.srb.util.JwtUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +35,9 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
 
     @Autowired
     private UserAccountMapper userAccountMapper;
+
+    @Autowired
+    private UserLoginRecordMapper userLoginRecordMapper;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -57,5 +65,50 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo> i
         UserAccount userAccount = new UserAccount();
         userAccount.setUserId(userInfo.getId());
         userAccountMapper.insert(userAccount);
+    }
+
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public UserInfoVO login(LoginVO loginVO, String ip) {
+
+        String mobile = loginVO.getMobile();
+        String password = loginVO.getPassword();
+        Integer userType = loginVO.getUserType();
+
+//        用户是否存在
+        QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("mobile",mobile);
+        wrapper.eq("user_type",userType);
+
+        UserInfo userInfo = baseMapper.selectOne(wrapper);
+        Assert.notNull(userInfo,ResultEnum.LOGIN_MOBILE_ERROR);
+//        密码是否正确
+        Assert.equals(MD5.encrypt(password),userInfo.getPassword(),ResultEnum.LOGIN_PASSWORD_ERROR);
+
+//        用户是否被禁用
+        Assert.equals(userInfo.getStatus(),UserInfo.STATUS_NORMAL,ResultEnum.LOGIN_LOKED_ERROR);
+
+//        记录登录日志
+        UserLoginRecord userLoginRecord = new UserLoginRecord();
+        userLoginRecord.setUserId(userInfo.getId());
+        userLoginRecord.setIp(ip);
+        userLoginRecordMapper.insert(userLoginRecord);
+
+//        生成token
+        String token = JwtUtils.createToken(userInfo.getId(), userInfo.getName());
+
+//        组装userInfoVo
+        UserInfoVO userInfoVO = new UserInfoVO();
+        userInfoVO.setToken(token);
+        userInfoVO.setName(userInfo.getName());
+        userInfoVO.setNickName(userInfo.getNickName());
+        userInfoVO.setHeadImg(userInfo.getHeadImg());
+        userInfoVO.setMobile(mobile);
+        userInfoVO.setUserType(userType);
+
+//        返回用户信息
+        return userInfoVO;
     }
 }
