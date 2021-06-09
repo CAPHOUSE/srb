@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
  */
 @Api(tags = "会员管理")
 @Slf4j
-@CrossOrigin
 @RestController
 @RequestMapping("/admin/core/userInfo")
 public class AdminUserInfoController {
