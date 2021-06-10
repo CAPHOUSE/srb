@@ -45,4 +45,6 @@ public class FileController {
         fileService.removeFile(url);
         return Result.ok().message("删除成功");
     }
+
+
 }
