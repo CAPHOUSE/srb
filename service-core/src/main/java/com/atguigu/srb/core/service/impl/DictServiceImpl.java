@@ -13,6 +13,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -121,4 +122,26 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         }
     }
 
+
+    @Override
+    public String getNameByParentDictCodeAndValue(String dictCode, Integer value) {
+        QueryWrapper<Dict> wrapper = new QueryWrapper<>();
+        wrapper.eq("dict_code",dictCode);
+        Dict parentDict = baseMapper.selectOne(wrapper);
+
+        if (parentDict == null){
+            return "";
+        }
+
+        wrapper = new QueryWrapper<>();
+        wrapper.eq("parent_id", parentDict.getId()).eq("value", value);
+
+        Dict dict = baseMapper.selectOne(wrapper);
+
+
+        if(dict == null) {
+            return "";
+        }
+        return dict.getName();
+    }
 }

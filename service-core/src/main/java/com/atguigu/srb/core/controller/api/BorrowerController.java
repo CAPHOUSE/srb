@@ -8,10 +8,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,5 +29,15 @@ public class BorrowerController {
         Long userId = JwtUtils.getUserId(token);
         borrowerService.saveBorrowerVOByUserId(borrowerVO, userId);
         return Result.ok().message("信息提交成功");
+    }
+
+
+    @ApiOperation("获取借款人认证状态")
+    @GetMapping("/auth/getBorrowerStatus")
+    public Result getBorrowerStatus(HttpServletRequest request){
+        String token = request.getHeader("token");
+        Long userId = JwtUtils.getUserId(token);
+        Integer status = borrowerService.getStatusByUserId(userId);
+        return Result.ok(status);
     }
 }
