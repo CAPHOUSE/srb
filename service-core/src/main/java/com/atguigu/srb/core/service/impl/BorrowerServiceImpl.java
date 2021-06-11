@@ -57,10 +57,14 @@ public class BorrowerServiceImpl extends ServiceImpl<BorrowerMapper, Borrower> i
     private UserIntegralMapper userIntegralMapper;
 
 
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveBorrowerVOByUserId(BorrowerVO borrowerVO, Long userId) {
+
+        //获取用户基本信息
         UserInfo userInfo = userInfoMapper.selectById(userId);
+
         //保存借款人信息
         Borrower borrower = new Borrower();
         BeanUtils.copyProperties(borrowerVO, borrower);
@@ -68,19 +72,20 @@ public class BorrowerServiceImpl extends ServiceImpl<BorrowerMapper, Borrower> i
         borrower.setName(userInfo.getName());
         borrower.setIdCard(userInfo.getIdCard());
         borrower.setMobile(userInfo.getMobile());
-        borrower.setStatus(BorrowerStatusEnum.AUTH_RUN.getStatus());//认证中
+        borrower.setStatus(BorrowerStatusEnum.AUTH_RUN.getStatus()); //认证中
         baseMapper.insert(borrower);
+
         //保存附件
         List<BorrowerAttach> borrowerAttachList = borrowerVO.getBorrowerAttachList();
         borrowerAttachList.forEach(borrowerAttach -> {
             borrowerAttach.setBorrowerId(borrower.getId());
             borrowerAttachMapper.insert(borrowerAttach);
         });
-        //更新会员状态，更新为认证中
+
+        //更新userInfo中的借款人认证状态
         userInfo.setBorrowAuthStatus(BorrowerStatusEnum.AUTH_RUN.getStatus());
         userInfoMapper.updateById(userInfo);
     }
-
 
     @Override
     public Integer getStatusByUserId(Long userId) {

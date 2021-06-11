@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "借款人")
@@ -18,13 +19,13 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class BorrowerController {
 
-    @Autowired
+    @Resource
     private BorrowerService borrowerService;
-
 
     @ApiOperation("保存借款人信息")
     @PostMapping("/auth/save")
     public Result save(@RequestBody BorrowerVO borrowerVO, HttpServletRequest request) {
+
         String token = request.getHeader("token");
         Long userId = JwtUtils.getUserId(token);
         borrowerService.saveBorrowerVOByUserId(borrowerVO, userId);
