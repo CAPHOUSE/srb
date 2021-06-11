@@ -37,11 +37,13 @@ public class AdminBorrowerController {
 
     @ApiOperation("获取借款人信息")
     @GetMapping("/show/{id}")
-    public Result show(@ApiParam("借款人id") @PathVariable Long id){
-         BorrowerDetailVO borrowerDetailVO = borrowerService.getBorrowerDetailVOById(id);
-         return Result.ok(borrowerDetailVO);
-    }
+    public Result show(
+            @ApiParam(value = "借款人id", required = true)
+            @PathVariable Long id){
 
+        BorrowerDetailVO borrowerDetailVO = borrowerService.getBorrowerDetailVOById(id);
+        return Result.ok(borrowerDetailVO);
+    }
 
     @ApiOperation("借款额度审批")
     @PostMapping("/approval")
