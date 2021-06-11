@@ -9,11 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
@@ -46,12 +42,22 @@ public class BorrowInfoController {
 
 
     @ApiOperation("提交借款申请")
-    @GetMapping("/auth/save")
+    @PostMapping("/auth/save")
     public Result save(@RequestBody BorrowInfo borrowInfo,HttpServletRequest request){
         String token = request.getHeader("token");
         Long userId = JwtUtils.getUserId(token);
         borrowInfoService.saveBorrowInfo(borrowInfo, userId);
         return Result.ok().message("提交成功");
+    }
+
+
+    @ApiOperation("获取借款申请审批状态")
+    @GetMapping("/auth/getBorrowInfoStatus")
+    public Result getBorrowerStatus(HttpServletRequest request){
+        String token = request.getHeader("token");
+        Long userId = JwtUtils.getUserId(token);
+        Integer status = borrowInfoService.getStatusByUserId(userId);
+        return Result.ok(status);
     }
 }
 
