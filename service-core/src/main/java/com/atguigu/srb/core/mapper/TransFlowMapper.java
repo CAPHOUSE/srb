@@ -1,5 +1,6 @@
 package com.atguigu.srb.core.mapper;
 
+import com.atguigu.srb.core.pojo.bo.TransFlowBO;
 import com.atguigu.srb.core.pojo.entity.TransFlow;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface TransFlowMapper extends BaseMapper<TransFlow> {
 
+    void saveTransFlow(TransFlowBO transFlowBO);
 }
